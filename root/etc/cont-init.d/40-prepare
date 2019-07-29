@@ -1,0 +1,32 @@
+#!/usr/bin/with-contenv sh
+
+# Redis
+[ -e /config/redis ] || mkdir -p /config/redis
+chown -R abc:abc /config/redis
+
+# UNMS
+[ -e /config/unms ] || mv /home/app/unms/data /config/unms
+[ -d /home/app/unms/data ] && rm -rf /home/app/unms/data
+ln -s /config/unms /home/app/unms/data
+
+# Nginx Firmware
+mkdir -p /home/app/unms/public/firmwares /www
+ln -s /home/app/unms/public/firmwares /www/firmwares
+
+# Certs
+[ -e /config/cert ] || mkdir -p /config/cert
+ln -s /config/cert /cert
+
+# UNMS Logs
+[ -e /config/unms/logs ] || mkdir -p /config/unms/logs
+chown -R nobody:nogroup /config/unms/logs
+
+# Service Logs
+[ -e /config/logs ] || mkdir -p /config/logs
+chown -R nobody:nogroup /config/logs
+
+# Clean cron
+[ -f /var/run/crond.pid ] && rm -rf /var/run/crond.pid
+
+# Fix hosts file
+echo "127.0.0.1 unms" >> /etc/hosts
